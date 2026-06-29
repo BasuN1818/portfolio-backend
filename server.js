@@ -13,7 +13,10 @@ const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.resolve(__dirname, '.env') });
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:5173', 'https://bnporfolio.netlify.app'],
+  credentials: true
+}));
 app.use(express.json());
 
 const CONTACTS_FILE_PATH = path.resolve(__dirname, 'contacts.json');
@@ -181,7 +184,7 @@ app.post('/api/admins', async (req, res) => {
     }
 
     const admins = await readAdmins();
-    
+
     // Check if email already exists
     if (admins.some(a => a.email.toLowerCase() === newAdminData.email.toLowerCase())) {
       return res.status(400).json({ error: 'An admin with this email already exists.' });
@@ -339,8 +342,8 @@ server.on('error', async (err) => {
   const errorMsg = `[${new Date().toISOString()}] Server error: ${err.message}\nStack: ${err.stack}\n\n`;
   try {
     await fs.appendFile(path.resolve(__dirname, 'backend_error.log'), errorMsg, 'utf-8');
-  } catch (e) {}
-  
+  } catch (e) { }
+
   if (err.code === 'EADDRINUSE') {
     console.error(`ERROR: Port ${PORT} is already in use!`);
     console.error('Another server may be running. Close it first or change PORT in .env');
@@ -354,7 +357,7 @@ process.on('uncaughtException', async (err) => {
   const errorMsg = `[${new Date().toISOString()}] Uncaught Exception: ${err.message}\nStack: ${err.stack}\n\n`;
   try {
     await fs.appendFile(path.resolve(__dirname, 'backend_error.log'), errorMsg, 'utf-8');
-  } catch (e) {}
+  } catch (e) { }
   console.error('Uncaught Exception:', err);
   process.exit(1);
 });
@@ -363,6 +366,6 @@ process.on('unhandledRejection', async (reason, promise) => {
   const errorMsg = `[${new Date().toISOString()}] Unhandled Rejection: ${reason}\n\n`;
   try {
     await fs.appendFile(path.resolve(__dirname, 'backend_error.log'), errorMsg, 'utf-8');
-  } catch (e) {}
+  } catch (e) { }
   console.error('Unhandled Rejection:', reason);
 });
