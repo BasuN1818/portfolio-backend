@@ -16,7 +16,7 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
 const app = express();
 
 // Custom CORS configuration to allow mobile devices on the local network (DHCP) dynamically
-const allowedOrigins = ['http://localhost:5173', 'https://bnporfolio.netlify.app'];
+const allowedOrigins = ['http://localhost:5173', 'https://bn18portfolio.netlify.app'];
 const isLocalIp = (origin) => {
   if (!origin) return true;
   // Match localhost, 127.0.0.1, or local network IPs (e.g. 192.168.x.x, 10.x.x.x, 172.16-31.x.x) with any port
